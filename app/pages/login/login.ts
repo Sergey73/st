@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
-import { FireLogin } from '../../utils/fire-login';
+import { Fire } from '../../utils/fire';
 
 
 /*
@@ -14,17 +14,17 @@ import { FireLogin } from '../../utils/fire-login';
 })
 export class LoginPage {
 
-  constructor(private navCtrl: NavController, private fireLogin: FireLogin) {
+  constructor(private navCtrl: NavController, private fire: Fire) {
 
   }
 
   onLogin() {
-    this.fireLogin.login('streetCity73@gmail.com', 'QaZ@EdC13', (res) => {
-      alert(res);
+    this.fire.login('streetCity73@gmail.com', '671310', (res) => {
+      console.dir(res);
     }, (err) => {
-      alert(err);
+      console.dir(err);
     });
   }
 
-
+  
 }

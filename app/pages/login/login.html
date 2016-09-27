@@ -7,12 +7,23 @@
 <ion-header>
 
   <ion-navbar>
-    <ion-title>login2</ion-title>
+    <ion-title>login</ion-title>
   </ion-navbar>
 
 </ion-header>
 
 
 <ion-content padding>
+  <ion-list>
+
+    <ion-item>
+      <ion-input type="text" placeholder="Логин"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-input type="password" placeholder="Пароль"></ion-input>
+    </ion-item>
+
+  </ion-list>
   <button (click)="onLogin()">Войти</button>
 </ion-content>
