@@ -1,33 +1,40 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, Platform } from 'ionic-angular';
 import { Fire } from '../../utils/fire';
+import { Geolocation } from 'ionic-native';
 
 declare var mapboxgl: any;
 
+
 @Component({
-  templateUrl: 'build/pages/map/map.html',
+  templateUrl: 'build/pages/map/map.html'
 })
+
 export class MapPage {
-  map: any;
-  // items: any = [1, 2, 3, 4, 5];
-
   constructor(
-    private navCtrl: NavController, private fire: Fire
-    ) {
+    private navCtrl: NavController, platform: Platform, private fire: Fire) {
+    platform.ready().then(() => {
+      this.initPage();
+    });
 
-    this.initPage();
+  }
+
+  private initPage() {
+    Geolocation.getCurrentPosition().then((resp) => {
+    this.loadMap(resp.coords.longitude, resp.coords.latitude);
+    })
+    // this.loadMap(48.3113038, 54.3295861)
+  }
+
+  private loadMap(long, lat) {
     mapboxgl.accessToken = 'pk.eyJ1Ijoic2VyZ2V5NzMiLCJhIjoiY2lyM3JhYnAxMDAyeGh5bnFmczh3cTRseiJ9.KVe54Q2NCigy3J0j3didAA';
-    window.setTimeout(() => {
-      this.map = new mapboxgl.Map({
-          container: 'map',
-          style: 'mapbox://styles/mapbox/streets-v9'
-      });
-    }, 5000);
-  }
 
-  initPage() {
-   
+    new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v9',
+      center: [long, lat],
+      zoom: 11
+    }); 
   }
-
 
 }
