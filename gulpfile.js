@@ -2,6 +2,7 @@ var gulp = require('gulp'),
     gulpWatch = require('gulp-watch'),
     del = require('del'),
     runSequence = require('run-sequence'),
+    jade = require( 'gulp-jade' ),
     argv = process.argv;
 
 

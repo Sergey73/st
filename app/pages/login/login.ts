@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, NavParams } from 'ionic-angular';
 import { Fire } from '../../utils/fire';
 import { MenuPage } from '../menu/menu';
+// for develop
+import { MapPage } from '../map/map';
 
 @Component({
   templateUrl: 'build/pages/login/login.html',
@@ -10,13 +12,17 @@ export class LoginPage {
   login: string = 'streetCity73@gmail.com';
   password: string = '671310';
 
-  constructor(private navCtrl: NavController, private fire: Fire) {
-
+  constructor(private navCtrl: NavController, params: NavParams,
+     private fire: Fire) {
+    this.onLogin();
   }
 
   onLogin() {
     this.fire.login(this.login, this.password, (res) => {
-      this.navCtrl.setRoot(MenuPage);
+      let testParams = 1;
+    //  this.navCtrl.setRoot(MenuPage); // old
+     //develop
+      this.navCtrl.setRoot(MapPage, { testParams } );
     }, (err) => {
       console.dir(err);
     });
