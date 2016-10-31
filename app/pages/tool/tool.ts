@@ -1,14 +1,15 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 @Component({
   selector:  'tool-b',
-  templateUrl: 'build/pages/tool/tool.html'
+  templateUrl: 'build/pages/tool/tool.html',
+  inputs: ['coords']
 })
 export class ToolPage {
-  params: any;
+  // @Input() params: any;
   constructor(private navCtrl: NavController) {
-    this.params = 'params';
+    // this.coords = {lat: 0, lng:0};
   }
 
 

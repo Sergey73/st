@@ -7,21 +7,20 @@
 
 </ion-header>
 
-<tool-b></tool-b>
+<tool-b [coords]="coords"></tool-b>
 
 <!--параметры для разработки-->
-<div class="box">
+<!--<div class="box">
   <ion-list no-lineas>
     <ion-item>
       <ion-label stacked>Координаты</ion-label>
       <ion-textarea type="text" placeholder="ввести"></ion-textarea>
     </ion-item>
-
     <ion-item>
       <button block (click)="clickBtn()">кнопка</button>
     </ion-item>
   </ion-list>
-</div>
+</div>-->
 
 <ion-content class="map">
   <div id='map' style="border: 2px solid green;position:absolute; top:0; bottom:0; width:100%;"></div>

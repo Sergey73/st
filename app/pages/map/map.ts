@@ -2,10 +2,12 @@ import { Component } from '@angular/core';
 import { NavController, Platform, NavParams } from 'ionic-angular';
 import { Fire } from '../../utils/fire';
 import { Geolocation } from 'ionic-native';
-import {ToolPage} from '../tool/tool';
+import { ToolPage  } from '../tool/tool';
+
 
 // подключенные глобальные библиотеки 
 declare var mapboxgl: any; 
+declare var leafletDraw: any; 
 declare var L: any;
 
 
@@ -19,6 +21,7 @@ export class MapPage {
   public marker: any;
   public tool: any;
   param: any;
+  coords: any;
 
   constructor(
     private navCtrl: NavController, 
@@ -34,12 +37,19 @@ export class MapPage {
   }
 
   private initPage() {
+    let that = this;
+
     L.mapbox.accessToken = 'pk.eyJ1Ijoic2VyZ2V5NzMiLCJhIjoiY2lyM3JhYnAxMDAyeGh5bnFmczh3cTRseiJ9.KVe54Q2NCigy3J0j3didAA';
     this.map = L.mapbox.map('map', 'mapbox.streets', {
+      drawControl: true,
       minZoom: 9,
-      maxBounds: [[54.4151707, 48.1869299], [54.2354728, 48.6599867]]
+      maxBounds: [[54.46605, 48.08372], [53.86225, 50.21576]]
     }).setView([54.311096, 48.3257941], 9);
 
+    // координаты мыши показываем в tool
+    this.map.on('mousemove', function(e) {
+        that.coords = e.latlng;
+    });
 
     this.marker = L.marker([54.4151707, 48.3257941], {
       draggable: true
