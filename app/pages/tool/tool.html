@@ -1,4 +1,17 @@
-<div class="tool-x">
-  <h3>tools</h3>
-  <div>{{ coords }}</div>
-</div>
+<!--сохранение маршрута-->
+<ion-content>
+  <div class="tool-x">
+    <ion-list no-lineas>
+      <ion-item>{{ options.coords }}</ion-item>
+      <ion-item>{{ options.track }}</ion-item>
+      <ion-item>
+        <ion-label stacked>Номер маршрута</ion-label>
+        <ion-textarea [(ngModel)]="track" type="text" placeholder="ввести номер"></ion-textarea>
+      </ion-item>
+      <ion-item>
+        <button block (click)="saveTrack()">Сохранить</button>
+      </ion-item>
+    </ion-list>
+  </div>
+</ion-content>
+

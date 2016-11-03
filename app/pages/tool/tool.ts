@@ -1,20 +1,21 @@
-import { Component, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
 @Component({
   selector:  'tool-b',
   templateUrl: 'build/pages/tool/tool.html',
-  inputs: ['coords']
+  inputs: ['options']
 })
 export class ToolPage {
-  // @Input() params: any;
+  track: any;
+
   constructor(private navCtrl: NavController) {
-    // this.coords = {lat: 0, lng:0};
+
   }
 
-
-  ionTest() {
-    console.dir('test');
+  saveTrack() {
+    var that = this;
+    console.log(that.track);
   }
 
 }

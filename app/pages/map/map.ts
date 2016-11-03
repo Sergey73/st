@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { NavController, Platform, NavParams } from 'ionic-angular';
 import { Fire } from '../../utils/fire';
-import { Geolocation } from 'ionic-native';
+// import { Geolocation } from 'ionic-native';
 import { ToolPage  } from '../tool/tool';
 
 
@@ -18,10 +18,11 @@ declare var L: any;
 
 export class MapPage {
   public map: any;
+  public featureGroup: any;
   public marker: any;
   public tool: any;
   param: any;
-  coords: any;
+  options: any;
 
   constructor(
     private navCtrl: NavController, 
@@ -29,6 +30,7 @@ export class MapPage {
     private fire: Fire,
     public params: NavParams) {
     this.param = this.params.get('testParams');
+    this.options = {};
 
     platform.ready().then(() => {
       this.initPage();
@@ -37,8 +39,8 @@ export class MapPage {
   }
 
   private initPage() {
-    let that = this;
-
+    var that = this;
+    
     L.mapbox.accessToken = 'pk.eyJ1Ijoic2VyZ2V5NzMiLCJhIjoiY2lyM3JhYnAxMDAyeGh5bnFmczh3cTRseiJ9.KVe54Q2NCigy3J0j3didAA';
     this.map = L.mapbox.map('map', 'mapbox.streets', {
       drawControl: true,
@@ -48,7 +50,7 @@ export class MapPage {
 
     // координаты мыши показываем в tool
     this.map.on('mousemove', function(e) {
-        that.coords = e.latlng;
+        that.options.coords = e.latlng;
     });
 
     this.marker = L.marker([54.4151707, 48.3257941], {
@@ -60,7 +62,7 @@ export class MapPage {
     this.tool = ToolPage;
 
     this.createTrack();
-    // let watch = Geolocation.watchPosition({
+    // var watch = Geolocation.watchPosition({
     //   maximumAge: 2000, 
     //   timeout: 5000, 
     //   enableHighAccuracy: true
@@ -78,8 +80,8 @@ export class MapPage {
     //   //         'Timestamp: '         + resp.timestamp                + '\n');
     //   this.setPosition(resp.coords.latitude, resp.coords.longitude);
     // });
-    // let lat: any = 54.311096;
-    // let lon: any = 48.3257941;
+    // var lat: any = 54.311096;
+    // var lon: any = 48.3257941;
     
     // setInterval(() => {
     //   lat =  ((lat.toFixed(4) * 10000) + 2) / 10000;
@@ -89,12 +91,12 @@ export class MapPage {
   }
 
   private createTrack () {
-    let that = this;
-    let featureGroup = L.featureGroup().addTo(that.map);
+    var that = this;
+    that.featureGroup = L.featureGroup().addTo(that.map);
 
-    let drawControl = new L.Control.Draw({
+    var drawControl = new L.Control.Draw({
       edit: {
-        featureGroup: featureGroup
+        featureGroup: that.featureGroup
       },
       draw: {
         polygon: true,
@@ -105,20 +107,36 @@ export class MapPage {
       }
     }).addTo(that.map);
 
-    that.map.on('draw:created', showPolygonArea);
-    that.map.on('draw:edited', showPolygonAreaEdited);
+    that.map.on('draw:created', function (e) { 
+      that.showPolygonArea(e); 
+      that.options.track = e;
+    });
 
-    function showPolygonAreaEdited(e) {
-      e.layers.eachLayer(function(layer) {
-        showPolygonArea({ layer: layer });
-      });
-    }
-    function showPolygonArea(e) {
-      featureGroup.clearLayers();
-      featureGroup.addLayer(e.layer);
-     // e.layer.bindPopup((LGeo.area(e.layer) / 1000000).toFixed(2) + ' km<sup>2</sup>');
-      e.layer.openPopup();
-    }
+    that.map.on('draw:edited', function(e) {
+      that.showPolygonAreaEdited(e);
+      that.options.track = e;
+    });
+
+    that.map.on('draw:delete', function(e) {
+      console.log(`delete ${e}`);
+      that.options.track = e;
+    });
+
+  }
+
+  showPolygonAreaEdited(e) {
+    var that = this;
+    e.layers.eachLayer(function(layer) {
+      that.showPolygonArea({ layer: layer });
+    });
+  }
+
+  showPolygonArea(e) {
+    var that = this;
+    that.featureGroup.clearLayers();
+    that.featureGroup.addLayer(e.layer);
+    // e.layer.bindPopup((LGeo.area(e.layer) / 1000000).toFixed(2) + ' km<sup>2</sup>');
+    e.layer.openPopup();
   }
   // mapgl
   // private loadMap(long, lat) {
