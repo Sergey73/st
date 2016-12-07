@@ -1,9 +1,10 @@
 .tool-x {
   border: 2px solid red;
   width: 300px;
-  // height: 80px;
+  height:300px;
   position: absolute;
   top: 10px;
   right: 10px;
+  left: inherit;
   z-index: 100;
 }

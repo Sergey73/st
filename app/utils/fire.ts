@@ -32,10 +32,14 @@ export class Fire {
     this.user.email = userData.providerData[0].email;
     this.user.refreshToken = userData.refreshToken;
 
+    // сохранение юзера
     this.saveUser();
   }
 
-  
+  getTrack() {
+
+  }
+
   private saveUser() {
     firebase.database().ref('users').child(this.user.id).set({
       latitude: 1,
