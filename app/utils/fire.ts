@@ -36,9 +36,6 @@ export class Fire {
     this.saveUser();
   }
 
-  getTrack() {
-
-  }
 
   private saveUser() {
     firebase.database().ref('users').child(this.user.id).set({
@@ -47,4 +44,15 @@ export class Fire {
       name: 'Admin'
     });
   }
+  
+  getTrack() {
+
+  }
+
+  saveTrack(data) {
+    var x = firebase.database().ref('tracks').child(data.number).set({
+      path: data.path
+    });
+  }
+
 }

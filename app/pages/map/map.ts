@@ -39,8 +39,8 @@ export class MapPage {
   }
 
   private initPage() {
-    var that = this;
     
+    // вынести в константу
     L.mapbox.accessToken = 'pk.eyJ1Ijoic2VyZ2V5NzMiLCJhIjoiY2lyM3JhYnAxMDAyeGh5bnFmczh3cTRseiJ9.KVe54Q2NCigy3J0j3didAA';
     this.map = L.mapbox.map('map', 'mapbox.streets', {
       drawControl: true,
@@ -49,8 +49,8 @@ export class MapPage {
     }).setView([54.31109, 48.42499], 9);
 
     // координаты мыши показываем в tool
-    this.map.on('mousemove', function(e) {
-        that.options.coords = e.latlng;
+    this.map.on('mousemove', (e) => {
+        this.options.coords = e.latlng;
     });
 
     this.marker = L.marker([54.4151707, 48.3257941], {
@@ -91,12 +91,11 @@ export class MapPage {
   }
 
   private createTrack () {
-    var that = this;
-    that.featureGroup = L.featureGroup().addTo(that.map);
+    this.featureGroup = L.featureGroup().addTo(this.map);
 
     var drawControl = new L.Control.Draw({
       edit: {
-        featureGroup: that.featureGroup
+        featureGroup: this.featureGroup
       },
       draw: {
         polygon: true,
@@ -105,36 +104,48 @@ export class MapPage {
         circle: false,
         marker: false
       }
-    }).addTo(that.map);
+    }).addTo(this.map);
 
-    that.map.on('draw:created', function (e) { 
-      that.showPolygonArea(e); 
-      that.options.track = e;
+    this.map.on('draw:created', (e) => { 
+      this.showPolygonArea(e); 
+      this.options.track = e;
+
+      // сохранение полигона
+      var type = e.layerType;
+      var layer = e.layer;
+
+      var shape = layer.toGeoJSON()
+      var shapeForDb = JSON.stringify(shape);
+      var dataTrack = {
+        number: 50,
+        path: shapeForDb
+      };
+      this.fire.saveTrack(dataTrack);
+
+      // end сохранение полигона
     });
 
-    that.map.on('draw:edited', function(e) {
-      that.showPolygonAreaEdited(e);
-      that.options.track = e;
+    this.map.on('draw:edited', (e) => {
+      this.showPolygonAreaEdited(e);
+      this.options.track = e;
     });
 
-    that.map.on('draw:delete', function(e) {
+    this.map.on('draw:delete', (e) => {
       console.log(`delete ${e}`);
-      that.options.track = e;
+      this.options.track = e;
     });
 
   }
 
   showPolygonAreaEdited(e) {
-    var that = this;
-    e.layers.eachLayer(function(layer) {
-      that.showPolygonArea({ layer: layer });
+    e.layers.eachLayer((layer) => {
+      this.showPolygonArea({ layer: layer });
     });
   }
 
   showPolygonArea(e) {
-    var that = this;
-    that.featureGroup.clearLayers();
-    that.featureGroup.addLayer(e.layer);
+    this.featureGroup.clearLayers();
+    this.featureGroup.addLayer(e.layer);
     // e.layer.bindPopup((LGeo.area(e.layer) / 1000000).toFixed(2) + ' km<sup>2</sup>');
     e.layer.openPopup();
   }
