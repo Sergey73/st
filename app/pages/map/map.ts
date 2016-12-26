@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { NavController, Platform, NavParams } from 'ionic-angular';
-import { Fire } from '../../utils/fire';
+// import { Fire } from '../../utils/fire';
 // import { Geolocation } from 'ionic-native';
 import { ToolPage  } from '../tool/tool';
 
@@ -27,7 +27,7 @@ export class MapPage {
   constructor(
     private navCtrl: NavController, 
     platform: Platform, 
-    private fire: Fire,
+    // private fire: Fire,
     public params: NavParams) {
     this.param = this.params.get('testParams');
     this.options = {};
@@ -114,13 +114,15 @@ export class MapPage {
       var type = e.layerType;
       var layer = e.layer;
 
-      var shape = layer.toGeoJSON()
+      var shape = layer.toGeoJSON();
       var shapeForDb = JSON.stringify(shape);
-      var dataTrack = {
-        number: 50,
-        path: shapeForDb
-      };
-      this.fire.saveTrack(dataTrack);
+      this.options.trackPath = shapeForDb;
+      console.dir(`track создан!`);
+      // var dataTrack = {
+      //   number: 50,
+      //   path: shapeForDb
+      // };
+      // this.fire.saveTrack(dataTrack);
 
       // end сохранение полигона
     });

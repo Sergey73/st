@@ -9,7 +9,7 @@
         <ion-textarea [(ngModel)]="track" type="text" placeholder="ввести номер"></ion-textarea>
       </ion-item>
       <ion-item>
-        <button block (click)="saveTrack()">Сохранить</button>
+        <button [disabled]="!track ? true : null" block (click)="saveTrack()">Сохранить</button>
       </ion-item>
     </ion-list>
   </div>
