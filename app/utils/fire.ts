@@ -46,11 +46,7 @@ export class Fire {
   }
   
   getTrack() {
-    return firebase.database().ref('tracks')
-      .on('value', (data) => {
-        console.dir(data.val());
-        return data.val();
-      });
+    return firebase.database().ref('tracks');
   }
 
   saveTrack(data) {

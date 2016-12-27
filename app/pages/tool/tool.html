@@ -4,13 +4,26 @@
     <ion-list no-lineas>
       <ion-item>{{ options.coords }}</ion-item>
       <ion-item>{{ options.track }}</ion-item>
+      <!--select-->
+      <ion-item>
+        <ion-label>Маршрут</ion-label>
+        <ion-select [(ngModel)]="checkedTrack">
+          <ion-option *ngFor="let item of allTracksArr; let i = index" value="{{i}}">{{ item.number}}</ion-option>
+        </ion-select>
+      </ion-item>
+      <!--end select-->
+      <ion-item>
+        <button [disabled]="!checkedTrack? true : null" block (click)="showTrack()">Показать</button>
+      </ion-item>
+      
       <ion-item>
         <ion-label stacked>Номер маршрута</ion-label>
-        <ion-textarea [(ngModel)]="track" type="text" placeholder="ввести номер"></ion-textarea>
+        <ion-textarea [(ngModel)]="trackNumber" type="text" placeholder="ввести номер"></ion-textarea>
       </ion-item>
       <ion-item>
-        <button [disabled]="!track ? true : null" block (click)="saveTrack()">Сохранить</button>
+        <button [disabled]="!trackNumber ? true : null" block (click)="saveTrack()">Сохранить</button>
       </ion-item>
+    
     </ion-list>
   </div>
 </ion-content>

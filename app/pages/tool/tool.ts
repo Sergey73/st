@@ -11,16 +11,30 @@ import { Fire } from '../../utils/fire';
   inputs: ['options']
 })
 export class ToolPage {
-  track: any;
+  
+  trackNumber: any;
+  checkedTrack: any;
+  allTracksArr: any;
+  allTracksObj: any;
   options: any;
+  test: any;
 
   constructor(
     private navCtrl: NavController, 
     private fire: Fire
     // private message: Message
     ) {
-      let trackData = this.fire.getTrack();
-      
+      this.allTracksArr = [];
+      this.fire.getTrack()
+        .on('value', (data) => { 
+          this.allTracksObj = data.val();
+          debugger
+          for (let track in this.allTracksObj) {
+            this.allTracksArr.push(
+              {number: track, path: this.allTracksObj[track]}
+            )
+          }
+        }); 
   }
 
   // presentAlert(title, message) {
@@ -40,11 +54,15 @@ export class ToolPage {
     }
 
     let dataTrack = {
-      number: this.track,
+      number: this.trackNumber,
       path: this.options.trackPath
     };
-  
+
     this.fire.saveTrack(dataTrack);
+  }
+
+  showTrack() {
+    console.dir(this.allTracksArr[this.checkedTrack]);
   }
 
 }
