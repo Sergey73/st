@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, Platform, NavParams } from 'ionic-angular';
+import { NavController, Platform, NavParams, Events } from 'ionic-angular';
 // import { Fire } from '../../utils/fire';
 // import { Geolocation } from 'ionic-native';
 import { ToolPage  } from '../tool/tool';
@@ -18,6 +18,7 @@ declare var L: any;
 
 export class MapPage {
   public map: any;
+  public trackLayer: any;
   public featureGroup: any;
   public marker: any;
   public tool: any;
@@ -28,7 +29,9 @@ export class MapPage {
     private navCtrl: NavController, 
     platform: Platform, 
     // private fire: Fire,
-    public params: NavParams) {
+    public params: NavParams,
+    public events: Events
+  ) {
     this.param = this.params.get('testParams');
     this.options = {};
 
@@ -39,7 +42,7 @@ export class MapPage {
   }
 
   private initPage() {
-    
+
     // вынести в константу
     L.mapbox.accessToken = 'pk.eyJ1Ijoic2VyZ2V5NzMiLCJhIjoiY2lyM3JhYnAxMDAyeGh5bnFmczh3cTRseiJ9.KVe54Q2NCigy3J0j3didAA';
     this.map = L.mapbox.map('map', 'mapbox.streets', {
@@ -47,7 +50,10 @@ export class MapPage {
       minZoom: 9,
       // maxBounds: [[54.46605, 48.08372], [53.86225, 50.21576]]
     }).setView([54.31109, 48.42499], 9);
-
+    
+    // слой для маршрута
+    this.trackLayer = L.mapbox.featureLayer().addTo(this.map);
+    
     // координаты мыши показываем в tool
     this.map.on('mousemove', (e) => {
         this.options.coords = e.latlng;
@@ -88,6 +94,14 @@ export class MapPage {
     //   lon =  ((lon.toFixed(4) * 10000) + 2) / 10000;
     //   this.setPosition(lat, lon);
     // }, 3000);
+    
+    // подписались на событие из сокпонента tool.ts для отрисовски маршрута
+    this.events.subscribe('track:show', (data) => {
+      let pathStr = data[0].path;
+      let path = JSON.parse(pathStr);
+      this.trackLayer.setGeoJSON(path);
+      // L.mapbox.featureLayer(path).addTo(this.map);
+    });
   }
 
   private createTrack () {

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, Events } from 'ionic-angular';
 import { Fire } from '../../utils/fire';
 // import { Message } from '../../utils/message';
 
@@ -21,18 +21,19 @@ export class ToolPage {
 
   constructor(
     private navCtrl: NavController, 
-    private fire: Fire
+    private fire: Fire,
+    public events: Events
     // private message: Message
     ) {
-      this.allTracksArr = [];
       this.fire.getTrack()
         .on('value', (data) => { 
+          this.allTracksArr = [];
           this.allTracksObj = data.val();
           debugger
           for (let track in this.allTracksObj) {
             this.allTracksArr.push(
-              {number: track, path: this.allTracksObj[track]}
-            )
+              {number: track, path: this.allTracksObj[track].path}
+            );
           }
         }); 
   }
@@ -62,7 +63,8 @@ export class ToolPage {
   }
 
   showTrack() {
-    console.dir(this.allTracksArr[this.checkedTrack]);
+    // передаем путь в компонент map.ts для отображения на карте
+    this.events.publish('track:show', this.allTracksArr[this.checkedTrack]);
   }
 
 }
