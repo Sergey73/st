@@ -3,6 +3,7 @@ import { NavController, Platform, NavParams, Events } from 'ionic-angular';
 // import { Fire } from '../../utils/fire';
 // import { Geolocation } from 'ionic-native';
 import { ToolPage  } from '../tool/tool';
+import { ToastService } from '../../utils/toast.service';
 
 
 // подключенные глобальные библиотеки 
@@ -30,7 +31,8 @@ export class MapPage {
     platform: Platform, 
     // private fire: Fire,
     public params: NavParams,
-    public events: Events
+    public events: Events,
+    public _toastService: ToastService
   ) {
     this.param = this.params.get('testParams');
     this.options = {};
@@ -49,7 +51,7 @@ export class MapPage {
       drawControl: true,
       minZoom: 9,
       // maxBounds: [[54.46605, 48.08372], [53.86225, 50.21576]]
-    }).setView([54.31109, 48.42499], 9);
+    }).setView([54.33414, 48.42499], 9);
     
     // слой для маршрута
     this.trackLayer = L.mapbox.featureLayer().addTo(this.map);
@@ -97,6 +99,11 @@ export class MapPage {
     
     // подписались на событие из сокпонента tool.ts для отрисовски маршрута
     this.events.subscribe('track:show', (data) => {
+      if (!data[0] || !data[0].path) {
+        this._toastService.presentToast('Выберите маршрут.');
+        return;
+      }
+
       let pathStr = data[0].path;
       let path = JSON.parse(pathStr);
       this.trackLayer.setGeoJSON(path);

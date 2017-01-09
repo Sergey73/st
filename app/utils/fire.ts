@@ -27,15 +27,29 @@ export class Fire {
     });
   }
 
+  createUser(email: string, password: string, successCallback, errorCallback) {
+    firebase.auth().createUserWithEmailAndPassword(email, password).then(response => {
+        console.log('user object:' + response);
+        successCallback(response);
+        debugger
+        //you can save the user data here.
+    }).catch(error => {
+        console.log('there was an error');
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        console.log(errorCode + ' - ' + errorMessage);
+        errorCallback(error);
+    });
+  }
+
   private setUser(userData: any) {
     this.user.id = userData.uid;
     this.user.email = userData.providerData[0].email;
     this.user.refreshToken = userData.refreshToken;
 
-    // сохранение юзера
+    // сохранение юзера в базу
     this.saveUser();
   }
-
 
   private saveUser() {
     firebase.database().ref('users').child(this.user.id).set({

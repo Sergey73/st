@@ -1,6 +1,5 @@
 import { AlertController } from 'ionic-angular';
 
-
 export class Message {
   constructor(private alertCtrl: AlertController) {
 
