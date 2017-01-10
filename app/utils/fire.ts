@@ -53,9 +53,9 @@ export class Fire {
 
   private saveUser() {
     firebase.database().ref('users').child(this.user.id).set({
+      email: this.user.email,
       latitude: 1,
-      longitude: 1,
-      name: 'Admin'
+      longitude: 1
     });
   }
   
@@ -68,5 +68,12 @@ export class Fire {
       path: data.path
     });
   }
+
+  auth() {
+    firebase.auth().signInAnonymously().then( x => {
+      var rootRef = firebase.database().ref();
+      debugger;
+    });
+  }  
 
 }

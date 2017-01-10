@@ -21,6 +21,10 @@ export class LoginPage {
 
   }
 
+  onTest() {
+    this.fire.auth();
+  }
+
   onLogin() {
     this.fire.login(this.login, this.password, (res) => {
       // let testParams = 1;
