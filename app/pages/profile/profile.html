@@ -1,0 +1,48 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Профиль</ion-title>
+    <button menuToggle><ion-icon name="menu"></ion-icon></button>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="profile">
+  <ion-list>
+    <ion-item>
+      <ion-input [(ngModel)]="profile.name" type="text" placeholder="Введите ваше имя"></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <button (click)="saveProfileData()">Сохранить</button>
+</ion-content>
+
+
+<!--
+<ion-content class="tool-x">
+  <div >
+    <ion-list no-lineas>
+      <ion-item>{{ options.coords }}</ion-item>
+      <ion-item>{{ options.track }}</ion-item>
+
+      <ion-item>
+        <ion-label>Маршрут</ion-label>
+        <ion-select [(ngModel)]="checkedTrack">
+          <ion-option *ngFor="let item of allTracksArr; let i = index" value="{{i}}">{{ item.number}}</ion-option>
+        </ion-select>
+      </ion-item>
+
+      <ion-item>
+        <button [disabled]="!checkedTrack? true : null" block (click)="showTrack()">Показать</button>
+      </ion-item>
+      
+      <ion-item>
+        <ion-label stacked>Номер маршрута</ion-label>
+        <ion-textarea [(ngModel)]="trackNumber" type="text" placeholder="ввести номер"></ion-textarea>
+      </ion-item>
+      <ion-item>
+        <button [disabled]="!trackNumber ? true : null" block (click)="saveTrack()">Сохранить</button>
+      </ion-item>
+    
+    </ion-list>
+  </div>
+</ion-content>
+-->

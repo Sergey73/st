@@ -29,7 +29,6 @@ export class ToolPage {
         .on('value', (data) => { 
           this.allTracksArr = [];
           this.allTracksObj = data.val();
-          debugger
           for (let track in this.allTracksObj) {
             this.allTracksArr.push(
               {number: track, path: this.allTracksObj[track].path}

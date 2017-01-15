@@ -30,9 +30,9 @@ export class Fire {
   createUser(email: string, password: string, successCallback, errorCallback) {
     firebase.auth().createUserWithEmailAndPassword(email, password).then(response => {
         console.log('user object:' + response);
+        // save the user data here.
+        this.setUser(response);
         successCallback(response);
-        debugger
-        //you can save the user data here.
     }).catch(error => {
         console.log('there was an error');
         var errorCode = error.code;
@@ -46,18 +46,8 @@ export class Fire {
     this.user.id = userData.uid;
     this.user.email = userData.providerData[0].email;
     this.user.refreshToken = userData.refreshToken;
-
-    // сохранение юзера в базу
-    this.saveUser();
   }
 
-  private saveUser() {
-    firebase.database().ref('users').child(this.user.id).set({
-      email: this.user.email,
-      latitude: 1,
-      longitude: 1
-    });
-  }
   
   getTrack() {
     return firebase.database().ref('tracks');
@@ -75,5 +65,20 @@ export class Fire {
       debugger;
     });
   }  
+  
+  // сохранение юзера в базу
+  saveUserProfile (data) {
+    firebase.database().ref('users').child(this.user.id).set({
+      // для разработки потом удалить
+      email: this.user.email,
+      publicData: {
+        name: data.name
+      }
+    });
+  }
+
+  getUserProfile() {
+    return firebase.database().ref('users').child(this.user.id).child('publicData');
+  }
 
 }
