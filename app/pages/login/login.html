@@ -18,8 +18,9 @@
     </ion-item>
 
   </ion-list>
-  
+
   <button (click)="onLogin()">Войти</button>
   <button (click)="onCreateUser()">Создать</button>
+  <button *ngIf="fire.user.isLogin" (click)="onLogout()">Выйти</button>
   <button (click)="onTest()">Тест</button>
 </ion-content>

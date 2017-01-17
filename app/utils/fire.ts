@@ -16,14 +16,38 @@ export class Fire {
       messagingSenderId: '367568561460'
     };
     firebase.initializeApp(config);
+    this.init();
   }
 
+  init() {
+    // следит за состоянием входом/выходом пользователья в систему
+    firebase.auth().onAuthStateChanged(firebaseUser => {
+      if (firebaseUser != null) {
+        console.dir('пользователь авторизован!');
+        this.setUserDataAuth(firebaseUser);
+      } else {
+        console.dir('пользователь не авторизован!');
+        this.setUserDataAuth(null);
+      }
+     });
+  }
+
+
+// auth
   login(email: string, password: string, successCallback, errorCallback) {
     firebase.auth().signInWithEmailAndPassword(email, password).then(response => {
-      this.setUser(response);
+      this.setUserDataAuth(response);
       successCallback(response);
-    }, error => {
+    }).catch( error => { 
       errorCallback(error);
+    }); 
+  }
+
+  logout() {
+    return firebase.auth().signOut().then(response => {
+      this.setUserDataAuth(null);
+    }).catch(error => {
+      console.dir(error);
     });
   }
 
@@ -31,7 +55,7 @@ export class Fire {
     firebase.auth().createUserWithEmailAndPassword(email, password).then(response => {
         console.log('user object:' + response);
         // save the user data here.
-        this.setUser(response);
+        this.setUserDataAuth(response);
         successCallback(response);
     }).catch(error => {
         console.log('there was an error');
@@ -41,14 +65,38 @@ export class Fire {
         errorCallback(error);
     });
   }
+// end auth
 
-  private setUser(userData: any) {
+
+// user profil
+  setUserDataAuth(userData: any) {
+    if (userData === null) {
+      this.user = {};
+      return;
+    }
     this.user.id = userData.uid;
     this.user.email = userData.providerData[0].email;
     this.user.refreshToken = userData.refreshToken;
+    this.user.isLogin = true;
   }
 
+  saveUserProfile (data) {
+    firebase.database().ref('users').child(this.user.id).update({
+      // email для разработки потом удалить
+      email: this.user.email,
+      publicData: {
+        name: data.name
+      }
+    });
+  } 
+
+  getUserProfile() {
+    return firebase.database().ref('users').child(this.user.id).child('publicData');
+  }
+// end user
+
   
+// track
   getTrack() {
     return firebase.database().ref('tracks');
   }
@@ -58,27 +106,18 @@ export class Fire {
       path: data.path
     });
   }
+// end track
 
+// test
   auth() {
-    firebase.auth().signInAnonymously().then( x => {
-      var rootRef = firebase.database().ref();
-      debugger;
-    });
-  }  
-  
-  // сохранение юзера в базу
-  saveUserProfile (data) {
-    firebase.database().ref('users').child(this.user.id).set({
-      // для разработки потом удалить
-      email: this.user.email,
-      publicData: {
-        name: data.name
-      }
-    });
-  }
+    debugger;
 
-  getUserProfile() {
-    return firebase.database().ref('users').child(this.user.id).child('publicData');
-  }
+    // firebase.auth().signInAnonymously().then( x => {
+    //   var rootRef = firebase.database().ref();
+    //   debugger;
+    // });
+  }  
+// end test
+  
 
 }
