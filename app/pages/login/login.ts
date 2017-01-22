@@ -1,12 +1,9 @@
 import { Component } from '@angular/core';
-import { NavController, NavParams } from 'ionic-angular';
+import { NavController, NavParams, Events } from 'ionic-angular';
 import { Fire } from '../../utils/fire';
 import { MenuPage } from '../menu/menu';
 import { ToastService } from '../../utils/toast.service';
-import { UserService } from '../../service/user.service';
 
-// for develop
-// import { MapPage } from '../map/map';
 
 @Component({
   templateUrl: 'build/pages/login/login.html',
@@ -16,17 +13,21 @@ export class LoginPage {
   password: string = '671310';
 
   constructor(
-    private navCtrl: NavController, 
+    public navCtrl: NavController, 
     params: NavParams,
-    private fire: Fire,
-    public _toastService: ToastService
+    public fire: Fire,
+    public _toastService: ToastService,
+    public events: Events
   ) {
-
+    this.events.subscribe('menu:mapPage', (data) => {
+      this.goToMapPage();
+    });
   }
 
-  onTest() {
-    this.fire.auth();
+  goToMapPage() {
+    this.navCtrl.setRoot(MenuPage); 
   }
+
 
   onLogin() {
     if (!this.login || !this.password) {
@@ -34,10 +35,7 @@ export class LoginPage {
       return;
     }
     this.fire.login(this.login, this.password, (res) => {
-      // let testParams = 1;
-      this.navCtrl.setRoot(MenuPage); // old
-      //develop
-      // this.navCtrl.setRoot(MapPage, { testParams } );
+      this.goToMapPage();
     }, (err) => {
       console.dir(err);
     });
@@ -55,6 +53,10 @@ export class LoginPage {
     this.fire.logout().then(response => {
 
     });
+  }
+
+  onTest() {
+    this.fire.auth();
   }
   
 }

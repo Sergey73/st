@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import { Events } from 'ionic-angular';
 
 declare var firebase: any;
 
@@ -7,7 +8,7 @@ declare var firebase: any;
 export class Fire {
   user: any = {};
 
-  constructor() {
+  constructor(public events: Events) {
     var config = {
       apiKey: 'AIzaSyD8cHdez2j1JTcQ4hfPoFs3YCsRSgtPfGY',
       authDomain: 'streetcity73-a464b.firebaseapp.com',
@@ -23,8 +24,9 @@ export class Fire {
     // следит за состоянием входом/выходом пользователья в систему
     firebase.auth().onAuthStateChanged(firebaseUser => {
       if (firebaseUser != null) {
-        console.dir('пользователь авторизован!');
+        console.dir('пользователь ' + firebaseUser.email + ' авторизован!1');
         this.setUserDataAuth(firebaseUser);
+        this.events.publish('menu:mapPage');
       } else {
         console.dir('пользователь не авторизован!');
         this.setUserDataAuth(null);
@@ -56,6 +58,7 @@ export class Fire {
         console.log('user object:' + response);
         // save the user data here.
         this.setUserDataAuth(response);
+        this.saveUserProfile();
         successCallback(response);
     }).catch(error => {
         console.log('there was an error');
@@ -77,16 +80,15 @@ export class Fire {
     this.user.id = userData.uid;
     this.user.email = userData.providerData[0].email;
     this.user.refreshToken = userData.refreshToken;
-    this.user.isLogin = true;
   }
 
-  saveUserProfile (data) {
-    firebase.database().ref('users').child(this.user.id).update({
+  saveUserProfile () {
+    firebase.database().ref('users').child(this.user.id).set({
       // email для разработки потом удалить
       email: this.user.email,
-      publicData: {
-        name: data.name
-      }
+      // publicData: {
+      //   name: data.name
+      // }
     });
   } 
 

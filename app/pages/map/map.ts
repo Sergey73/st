@@ -27,7 +27,7 @@ export class MapPage {
   options: any;
 
   constructor(
-    private navCtrl: NavController, 
+    public navCtrl: NavController, 
     platform: Platform, 
     // private fire: Fire,
     public params: NavParams,
@@ -36,15 +36,13 @@ export class MapPage {
   ) {
     this.param = this.params.get('testParams');
     this.options = {};
+  }
 
-    platform.ready().then(() => {
-      this.initPage();
-    });
-
+  ionViewDidEnter () {
+    this.initPage();
   }
 
   private initPage() {
-
     // вынести в константу
     L.mapbox.accessToken = 'pk.eyJ1Ijoic2VyZ2V5NzMiLCJhIjoiY2lyM3JhYnAxMDAyeGh5bnFmczh3cTRseiJ9.KVe54Q2NCigy3J0j3didAA';
     this.map = L.mapbox.map('map', 'mapbox.streets', {
