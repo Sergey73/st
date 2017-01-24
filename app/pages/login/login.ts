@@ -49,12 +49,6 @@ export class LoginPage {
     });
   }
 
-  onLogout() {
-    this.fire.logout().then(response => {
-
-    });
-  }
-
   onTest() {
     this.fire.auth();
   }

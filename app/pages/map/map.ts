@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { NavController, Platform, NavParams, Events } from 'ionic-angular';
-// import { Fire } from '../../utils/fire';
+import { Fire } from '../../utils/fire';
 // import { Geolocation } from 'ionic-native';
 import { ToolPage  } from '../tool/tool';
+import { LoginPage } from '../../pages/login/login';
 import { ToastService } from '../../utils/toast.service';
 
 
@@ -18,6 +19,7 @@ declare var L: any;
 })
 
 export class MapPage {
+  loginPage: any = LoginPage;
   public map: any;
   public trackLayer: any;
   public featureGroup: any;
@@ -25,32 +27,54 @@ export class MapPage {
   public tool: any;
   param: any;
   options: any;
+  public isAdmin: boolean = false;
 
   constructor(
     public navCtrl: NavController, 
     platform: Platform, 
-    // private fire: Fire,
+    private fire: Fire,
     public params: NavParams,
     public events: Events,
     public _toastService: ToastService
   ) {
-    this.param = this.params.get('testParams');
+    this.param = this.params.get('admin');
     this.options = {};
   }
 
-  ionViewDidEnter () {
-    this.initPage();
+
+  getRull() {
+    this.fire.getRull()
+    .on('value', (data) => { 
+      this.isAdmin = true;
+      // загрузка карты
+      this.initPage();
+    }, error => {
+      this.isAdmin = false;
+      // загрузка карты
+      this.initPage();
+    });
   }
 
-  private initPage() {
+  // подключаем карту после загрузки страницы
+  // ionViewDidEnter () {
+  ionViewWillEnter () {
+    // проверка на админа
+    this.getRull();
+  }
+
+  initMap() {
     // вынести в константу
     L.mapbox.accessToken = 'pk.eyJ1Ijoic2VyZ2V5NzMiLCJhIjoiY2lyM3JhYnAxMDAyeGh5bnFmczh3cTRseiJ9.KVe54Q2NCigy3J0j3didAA';
     this.map = L.mapbox.map('map', 'mapbox.streets', {
-      drawControl: true,
+      drawControl: this.isAdmin,
       minZoom: 9,
       // maxBounds: [[54.46605, 48.08372], [53.86225, 50.21576]]
     }).setView([54.33414, 48.42499], 9);
-    
+  }
+
+  private initPage() {
+    debugger
+    !this.map ? this.initMap() : null;
     // слой для маршрута
     this.trackLayer = L.mapbox.featureLayer().addTo(this.map);
     
@@ -67,7 +91,7 @@ export class MapPage {
     this.marker.addTo(this.map);
     this.tool = ToolPage;
 
-    this.createTrack();
+    this.isAdmin ? this.createTrack() : null;
     // var watch = Geolocation.watchPosition({
     //   maximumAge: 2000, 
     //   timeout: 5000, 
@@ -186,5 +210,13 @@ export class MapPage {
   //   this.marker.setLatLng([lat, long]).update();
 
   // }
+
+  logout() {
+    var callback = (response) => {
+      this.navCtrl.setRoot(this.loginPage);
+    };
+
+    this.fire.logout(callback);
+  }
 }
  

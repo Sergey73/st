@@ -4,6 +4,7 @@ import { MapPage } from '../map/map';
 import { ProfilePage } from '../profile/profile';
 
 
+
 @Component({
   templateUrl: 'build/pages/menu/menu.html',
 })

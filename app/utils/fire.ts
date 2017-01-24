@@ -20,12 +20,18 @@ export class Fire {
     this.init();
   }
 
+  // проверка на является ли пользователь админом
+  getRull() {
+    return firebase.database().ref('admins').child(this.user.id);
+  }
+
   init() {
     // следит за состоянием входом/выходом пользователья в систему
     firebase.auth().onAuthStateChanged(firebaseUser => {
       if (firebaseUser != null) {
         console.dir('пользователь ' + firebaseUser.email + ' авторизован!1');
         this.setUserDataAuth(firebaseUser);
+        // this.getRull();
         this.events.publish('menu:mapPage');
       } else {
         console.dir('пользователь не авторизован!');
@@ -36,18 +42,21 @@ export class Fire {
 
 
 // auth
+
   login(email: string, password: string, successCallback, errorCallback) {
     firebase.auth().signInWithEmailAndPassword(email, password).then(response => {
       this.setUserDataAuth(response);
+      // this.getRull();
       successCallback(response);
     }).catch( error => { 
       errorCallback(error);
     }); 
   }
 
-  logout() {
+  logout(successCallback) {
     return firebase.auth().signOut().then(response => {
       this.setUserDataAuth(null);
+      successCallback(response);
     }).catch(error => {
       console.dir(error);
     });

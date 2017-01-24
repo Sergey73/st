@@ -3,11 +3,12 @@
   <ion-navbar>
     <ion-title>Карта</ion-title>
     <button menuToggle><ion-icon name="menu"></ion-icon></button>
+    <button ion-button (click)="logout()">Выйти</button>
   </ion-navbar>
 
 </ion-header>
 
-<tool-b [options]="options"></tool-b>
+<tool-b *ngIf="isAdmin" [options]="options"></tool-b>
 
 <ion-content class="map">
   <div id='map' style="border: 2px solid green;position:absolute; top:0; bottom:0; width:100%;"></div>
