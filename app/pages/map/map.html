@@ -8,7 +8,7 @@
 
 </ion-header>
 
-<tool-b *ngIf="isAdmin" [options]="options"></tool-b>
+<tool-b *ngIf="showAdminTools" [options]="options"></tool-b>
 
 <ion-content class="map">
   <div id='map' style="border: 2px solid green;position:absolute; top:0; bottom:0; width:100%;"></div>

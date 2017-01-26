@@ -27,7 +27,7 @@ export class MapPage {
   public tool: any;
   param: any;
   options: any;
-  public isAdmin: boolean = false;
+  public showAdminTools: boolean = false;
 
   constructor(
     public navCtrl: NavController, 
@@ -42,39 +42,58 @@ export class MapPage {
   }
 
 
-  getRull() {
-    this.fire.getRull()
-    .on('value', (data) => { 
-      this.isAdmin = true;
-      // загрузка карты
-      this.initPage();
-    }, error => {
-      this.isAdmin = false;
-      // загрузка карты
-      this.initPage();
-    });
-  }
+  // getAdminFlag() {
+  //   this.fire.getIsAdmin()
+  //   .on('value', (data) => { 
+  //     this.showAdminTools = true;
+  //     // загрузка карты
+  //     this.initMap();
+  //   }, error => {
+  //     this.showAdminTools = false;
+  //   });
+  // }
 
   // подключаем карту после загрузки страницы
-  // ionViewDidEnter () {
+  // срабатывает при заходе на страницу
   ionViewWillEnter () {
-    // проверка на админа
-    this.getRull();
+    console.dir(8);
+    this.showAdminTools = this.fire.getIsAdmin();
+    this.initMap();
   }
+
+  // срабатывает один раз когда страница загрузилась 
+  // в первый раз
+  // ionViewDidLoad() {
+  //   this.initMap();
+  // }
+
+  // срабатывает при заходе на страницу
+  ionViewDidEnter() {console.dir(2)}
+
+
+  // срабатывает при уходе со страницы
+  ionViewWillUnload() {console.dir(5)}
+  // срабатывает при уходе со страницы
+  ionViewWillLeave() {console.dir(3)}
+
+  ionViewDidLeave() {console.dir(4)}
+  
+  ionViewDidLoad() {console.dir(1)}
+  ionViewCanEnter() {console.dir(6)}
+  ionViewCanLeave() {console.dir(7)}
 
   initMap() {
     // вынести в константу
     L.mapbox.accessToken = 'pk.eyJ1Ijoic2VyZ2V5NzMiLCJhIjoiY2lyM3JhYnAxMDAyeGh5bnFmczh3cTRseiJ9.KVe54Q2NCigy3J0j3didAA';
     this.map = L.mapbox.map('map', 'mapbox.streets', {
-      drawControl: this.isAdmin,
+      drawControl: this.showAdminTools,
       minZoom: 9,
       // maxBounds: [[54.46605, 48.08372], [53.86225, 50.21576]]
     }).setView([54.33414, 48.42499], 9);
   }
 
   private initPage() {
-    debugger
-    !this.map ? this.initMap() : null;
+    this.initMap();
     // слой для маршрута
     this.trackLayer = L.mapbox.featureLayer().addTo(this.map);
     
@@ -91,7 +110,7 @@ export class MapPage {
     this.marker.addTo(this.map);
     this.tool = ToolPage;
 
-    this.isAdmin ? this.createTrack() : null;
+    this.showAdminTools ? this.createTrack() : null;
     // var watch = Geolocation.watchPosition({
     //   maximumAge: 2000, 
     //   timeout: 5000, 
@@ -211,6 +230,7 @@ export class MapPage {
 
   // }
 
+  // функцию перенести в login.ts сделать директиву для с кнопкой выход
   logout() {
     var callback = (response) => {
       this.navCtrl.setRoot(this.loginPage);

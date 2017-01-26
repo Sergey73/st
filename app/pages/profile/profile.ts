@@ -40,7 +40,7 @@ export class ProfilePage {
   }
 
   saveProfileData() {
-    // this.fire.saveUserProfile(this.profile);
+
   }
  
  

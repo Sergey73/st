@@ -19,7 +19,10 @@ export class LoginPage {
     public _toastService: ToastService,
     public events: Events
   ) {
-    this.events.subscribe('menu:mapPage', (data) => {
+    // this.events.subscribe('menu:mapPage', (data) => {
+    //   this.goToMapPage();
+    // });
+    this.fire.init(() => {
       this.goToMapPage();
     });
   }
@@ -34,19 +37,13 @@ export class LoginPage {
       this._toastService.presentToast('Введите логин и пароль!');
       return;
     }
-    this.fire.login(this.login, this.password, (res) => {
+    this.fire.login(this.login, this.password, () => {
       this.goToMapPage();
-    }, (err) => {
-      console.dir(err);
     });
   }
 
   onCreateUser() {
-    this.fire.createUser(this.login, this.password, res => {
-      debugger
-    }, err => {
-      debugger
-    });
+    this.fire.createUser(this.login, this.password);
   }
 
   onTest() {
